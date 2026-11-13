@@ -7,12 +7,13 @@ function fractalTree(generations, currentPattern = "0") {
 
     for (let i = 0; i < currentPattern.length; i++) {
         if (currentPattern[i] === "0") {
-            nextPattern += "1[0]0";
+            nextPattern += "1[L0][R0]";
         }
         else if (currentPattern[i] === "1") {
             nextPattern += "11";
         }
-        else if (currentPattern[i] === "[" || currentPattern[i] === "]") {
+        else if (currentPattern[i] === "[" || currentPattern[i] === "]" || currentPattern[i] === "L" ||
+            currentPattern[i] === "R") {
             nextPattern += currentPattern[i];
         }
     }

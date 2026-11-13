@@ -17,8 +17,8 @@ function setup() {
     };
 
     const treeConfig = {
-        length: 20,
-        generations: 5,
+        length: 10,
+        generations: 6,
     };
 
     const stateStack = [];
@@ -43,61 +43,72 @@ function update(world) {
     // No  update for the fractal tree
 }
 
-function draw(world) {
-    r.BeginDrawing();
-    r.ClearBackground(r.RAYWHITE);
-    const turtle = {
-        x: world.screen.width / 2,
-        y: world.screen.height,
-        angle: -90
-    };
-
-    const pattern = g.fractalTree(
-        world.treeConfig.generations
+function drawBranch(turtle, oldX, oldY) {
+    r.DrawLine(
+        oldX,
+        oldY,
+        turtle.x,
+        turtle.y,
+        r.BLACK
     );
+}
 
+function drawTree(pattern, turtle, stateStack, length) {
     for (const symbol of pattern) {
 
         if (symbol === "1") {
             const oldX = turtle.x;
             const oldY = turtle.y;
 
-            moveForward(
-                turtle,
-                world.treeConfig.length
-            );
+            moveForward(turtle, length);
 
-            r.DrawLine(
-                oldX,
-                oldY,
-                turtle.x,
-                turtle.y,
-                r.BLACK
-            );
+            drawBranch(turtle,oldX, oldY)
+        }
+
+        else if (symbol === "L") {
+            turtle.angle -= 45;
+        }
+
+        else if (symbol === "R") {
+            turtle.angle += 45;
         }
 
         else if (symbol === "[") {
-            world.stateStack.push({
+            stateStack.push({
                 x: turtle.x,
                 y: turtle.y,
                 angle: turtle.angle
             });
-
-            turtle.angle += 45;
         }
 
         else if (symbol === "]") {
-            const state = world.stateStack.pop();
+            const state = stateStack.pop();
 
             turtle.x = state.x;
             turtle.y = state.y;
             turtle.angle = state.angle;
         }
-
-        else if (symbol === "0") {
-            // nothing
-        }
     }
+}
+
+function draw(world) {
+    r.BeginDrawing();
+    r.ClearBackground(r.RAYWHITE);
+
+    const turtle = {
+        x: world.screen.width / 2,
+        y: world.screen.height - 10,
+        angle: -90
+    };
+
+    const stateStack = [];
+
+    drawTree(
+        world.pattern,
+        turtle,
+        stateStack,
+        world.treeConfig.length
+    );
 
     r.EndDrawing();
 }
