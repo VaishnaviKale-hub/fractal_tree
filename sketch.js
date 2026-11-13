@@ -6,7 +6,7 @@ function running() {
 }
 
 function setup() {
-    const screen = { width: 1500, height: 1000, fps: 100 };
+    const screen = { width: 1000, height: 1000, fps: 100 };
 
     r.InitWindow(screen.width, screen.height, "Fractal Tree");
 
@@ -54,15 +54,17 @@ function drawBranch(turtle, oldX, oldY) {
 }
 
 function drawTree(pattern, turtle, stateStack, length) {
+
     for (const symbol of pattern) {
 
         if (symbol === "1") {
             const oldX = turtle.x;
             const oldY = turtle.y;
 
+
             moveForward(turtle, length);
 
-            drawBranch(turtle,oldX, oldY)
+            drawBranch(turtle, oldX, oldY)
         }
 
         else if (symbol === "L") {
@@ -79,6 +81,7 @@ function drawTree(pattern, turtle, stateStack, length) {
                 y: turtle.y,
                 angle: turtle.angle
             });
+
         }
 
         else if (symbol === "]") {
@@ -87,26 +90,28 @@ function drawTree(pattern, turtle, stateStack, length) {
             turtle.x = state.x;
             turtle.y = state.y;
             turtle.angle = state.angle;
+
         }
     }
+}
+
+function resetTurtle(turtle, screen) {
+    turtle.x = screen.width / 2;
+    turtle.y = screen.height - 10;
+    turtle.angle = -90;
 }
 
 function draw(world) {
     r.BeginDrawing();
     r.ClearBackground(r.RAYWHITE);
 
-    const turtle = {
-        x: world.screen.width / 2,
-        y: world.screen.height - 10,
-        angle: -90
-    };
-
-    const stateStack = [];
+    resetTurtle(world.turtle, world.screen);
+    world.stateStack.length = 0;
 
     drawTree(
         world.pattern,
-        turtle,
-        stateStack,
+        world.turtle,
+        world.stateStack,
         world.treeConfig.length
     );
 
