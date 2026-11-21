@@ -64,7 +64,7 @@ function drawTree(pattern, turtle, stateStack, length) {
 
             moveForward(turtle, length);
 
-            drawBranch(turtle, oldX, oldY)
+            drawBranch(turtle, oldX, oldY);
         }
 
         else if (symbol === "L") {
